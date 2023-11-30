@@ -7,6 +7,44 @@
     android:id="@+id/SequenceGameLayout"
     tools:context=".SequenceGameActivity">
 
+    <TextView
+        android:id="@+id/sequence_game_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sequence Memory"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/start_game_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.331" />
+
+    <TextView
+        android:id="@+id/score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/start_game_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sequence_game_title"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/level_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Level: 1"
+        app:layout_constraintBottom_toBottomOf="@id/sequence_game_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.181"
+        android:textSize="40sp"
+        android:visibility="invisible"/>
+
     <Button
         android:id="@+id/start_game_button"
         android:layout_width="wrap_content"

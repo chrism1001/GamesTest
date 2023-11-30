@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import java.security.AccessController.getContext
@@ -25,10 +26,14 @@ class SequenceGameActivity : AppCompatActivity() {
 
     lateinit var startGameButton: Button
     lateinit var llContent: LinearLayout
+    lateinit var levelText: TextView
+    lateinit var titleText: TextView
+    lateinit var scoreText: TextView
 
     var newButtonListener = View.OnClickListener {
         Log.d("id", "button id = ${it.id.toString()}")
-        guess(it.id)
+        if (!cluePlaying)
+            guess(it.id)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +42,15 @@ class SequenceGameActivity : AppCompatActivity() {
 
         startGameButton = findViewById(R.id.start_game_button)
         llContent = findViewById(R.id.sequence_game_content)
+        levelText = findViewById(R.id.level_text)
+        titleText = findViewById(R.id.sequence_game_title)
+        scoreText = findViewById(R.id.score_text)
 
         startGameButton.setOnClickListener {
             startGameButton.visibility = View.INVISIBLE
+            levelText.visibility = View.VISIBLE
+            titleText.visibility = View.INVISIBLE
+            scoreText.visibility = View.GONE
             createGrid()
             createPattern()
             startGame()
@@ -54,19 +65,21 @@ class SequenceGameActivity : AppCompatActivity() {
     }
 
     fun playClueSequence() {
+        cluePlaying = true
         if (clueHoldTime >= 500)
             clueHoldTime -= 100
 
         Log.e("progress","gamelevel = $gameLevel")
-
-        cluePlaying = true
         var delay: Long = nextClueWaitTime.toLong()
         for (i in 0..gameLevel) {
+            Log.e("clue state", "clue state $cluePlaying")
+            val button: Button = findViewById(pattern[i])
             Timer().schedule(delay) {
-                val button: Button = findViewById(pattern[i])
-                button.backgroundTintList = ContextCompat.getColorStateList(button.context, R.color.white)
+                button.backgroundTintList =
+                    ContextCompat.getColorStateList(button.context, R.color.white)
                 Timer().schedule(clueHoldTime.toLong()) {
-                    button.backgroundTintList = ContextCompat.getColorStateList(button.context, R.color.light_blue)
+                    button.backgroundTintList =
+                        ContextCompat.getColorStateList(button.context, R.color.light_blue)
                 }
             }
             delay += clueHoldTime
@@ -85,6 +98,7 @@ class SequenceGameActivity : AppCompatActivity() {
 
         Log.v("guess and level", "guess = $guessCount, level = $gameLevel")
         if (guessCount == gameLevel) {
+            levelText.text = "Level: ${gameLevel+2}"
             guessCount = 0
             gameLevel++
             playClueSequence()
@@ -96,15 +110,20 @@ class SequenceGameActivity : AppCompatActivity() {
     // game lost function
     fun gameLoss() {
         Log.d("score", "Your score! ${gameLevel.toString()}")
+        scoreText.text = "Level: ${gameLevel+1}"
         gameLevel = 0
         guessCount = 0
         clueHoldTime = 1000
         cluePauseTime = 333
         nextClueWaitTime = 1000
         gamePlaying = false
+        levelText.text = "Level: 1"
         pattern.clear()
         llContent.removeAllViews()
+        levelText.visibility = View.GONE
         llContent.visibility = View.GONE
+        scoreText.visibility = View.VISIBLE
+        titleText.visibility = View.VISIBLE
         startGameButton.visibility = View.VISIBLE
     }
 
